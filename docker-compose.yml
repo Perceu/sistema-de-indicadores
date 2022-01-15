@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: 1nd1c@d0r35
+      MYSQL_DATABASE: sysindica
+    ports:
+      - '3306:3306'
+    networks:
+      - sysindica
+    volumes:
+      - mysqldata:/var/lib/mysql
+      - ./db:/home/bkp
+
+  php:
+    build: 
+      context: ./docker/
+      dockerfile: laravel.dockerfile
+    environment:
+      DB_HOST: db
+      DB_DATABASE: sysindica
+      DB_PASSWORD: 1nd1c@d0r35
+    networks:
+      - sysindica
+    ports:
+      - '8000:80'
+    volumes:
+      - ./backend/:/var/www/html
+
+volumes:
+  mysqldata:
+
+networks:
+  sysindica:
